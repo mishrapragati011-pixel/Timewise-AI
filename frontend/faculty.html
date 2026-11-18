@@ -1,0 +1,587 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Dashboard | TimeWise AI</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6fb;
+            color: #1e293b;
+        }
+
+        header {
+            background: #172554;
+            color: white;
+            padding: 22px 8%;
+        }
+
+        header h1 {
+            font-size: 27px;
+        }
+
+        header p {
+            color: #cbd5e1;
+            margin-top: 6px;
+        }
+
+        .dashboard {
+            max-width: 1050px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .welcome {
+            margin-bottom: 25px;
+        }
+
+        .welcome h2 {
+            color: #172554;
+            margin-bottom: 8px;
+        }
+
+        .welcome p {
+            color: #64748b;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        }
+
+        .card h3 {
+            margin-bottom: 20px;
+            color: #172554;
+        }
+
+        label {
+            display: block;
+            margin: 14px 0 7px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 15px;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .note {
+            background: #eff6ff;
+            padding: 18px;
+            border-radius: 10px;
+            color: #1e40af;
+            line-height: 1.6;
+        }
+
+        @media(max-width: 700px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: auto;
+            }
+        }
+          
+/* Professional Timetable Design */
+
+#timetableResult {
+    margin-top: 30px;
+    overflow-x: auto;
+}
+
+#timetableResult h3 {
+    color: #172554;
+    margin: 25px 0 12px;
+    font-size: 20px;
+}
+
+#timetableResult table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 25px;
+    min-width: 600px;
+}
+
+#timetableResult th {
+    background: #172554;
+    color: white;
+    padding: 14px 10px;
+    text-align: left;
+}
+
+#timetableResult td {
+    padding: 13px 10px;
+    border: 1px solid #e2e8f0;
+    font-size: 14px;
+}
+
+#timetableResult tr:nth-child(even) {
+    background: #f1f5f9;
+}
+
+#timetableResult tr:hover {
+    background: #dbeafe;
+}
+
+#timetableResult .free-period {
+    color: #64748b;
+    font-style: italic;
+    background: #f8fafc;
+}
+
+@page {
+    size: A4 landscape;
+    margin: 10mm;
+}
+
+#timetableResult .weekly-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+#timetableResult .weekly-table th,
+#timetableResult .weekly-table td {
+    padding: 12px 5px;
+    text-align: center;
+    font-size: 11px;
+    white-space: pre-line;
+    overflow-wrap: break-word;
+}
+
+#timetableResult .weekly-table th:first-child {
+    width: 12%;
+}
+
+#timetableResult .weekly-table td.free-period {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+@media print {
+    #timetableResult {
+        width: 100%;
+        page-break-inside: avoid;
+    }
+
+    #timetableResult .weekly-table {
+        page-break-inside: avoid;
+    }
+}
+
+
+@media print {
+
+    body * {
+        visibility: hidden !important;
+    }
+
+    #timetableResult,
+    #timetableResult * {
+        visibility: visible !important;
+    }
+
+    #timetableResult {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 15px;
+    }
+
+    #timetableResult::before {
+        content: "TIMEWISE AI - WEEKLY TIMETABLE";
+        display: block;
+        font-size: 22px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 25px;
+        color: #172554;
+    }
+
+    #timetableResult table {
+        min-width: 0;
+        width: 100%;
+        page-break-inside: avoid;
+    }
+
+    #timetableResult tr {
+        page-break-inside: avoid;
+    }
+}
+
+
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>⏰ TimeWise AI</h1>
+    <p>Faculty Dashboard</p>
+</header>
+
+<main class="dashboard">
+
+    <section class="welcome">
+        <h2>Welcome, Faculty! 👋</h2>
+        <p>Manage your academic schedule with TimeWise AI.</p>
+    </section>
+
+    <section class="content">
+
+        <div class="card">
+            <h3>👨‍🏫 Faculty Details</h3>
+
+            <label>Faculty Name</label>
+           <input
+            type="text"
+          id="facultyName"
+           placeholder="Enter faculty name"
+        >
+            <label>Department</label>
+           
+<select id="departmentSelect">
+    <option value="">Select Branch</option>
+    <option value="CSE">CSE</option>
+    <option value="CSE AI/ML">CSE AI/ML</option>
+    <option value="IT">Information Technology</option>
+    <option value="ECE">Electronics & Communication</option>
+    <option value="Chemical Engineering">Chemical Engineering</option>
+    <option value="Biotechnology">Biotechnology</option>
+</select>
+
+
+            <label>Faculty ID</label>
+            <input
+    type="text"
+    id="facultyId"
+    placeholder="Enter faculty ID"
+>
+
+            ('Faculty details form is ready!')">
+                Save Details
+            </button>
+        </div>
+
+        <div class="card">
+            <h3>📚 Teaching Information</h3>
+
+            <label>Subject</label>
+            <select id="subjectSelect">
+            <option value="">First select branch and semester</option>
+            </select>
+            <label>Class / Semester</label>
+            <select id="semesterSelect">
+                <option value="">Select Semester</option>
+                
+             <option value="">Select Semester</option>
+             <option value="1">1st Semester</option>
+            <option value="2">2nd Semester</option>
+            <option value="3">3rd Semester</option>
+            <option value="4">4th Semester</option>
+            <option value="5">5th Semester</option>
+            <option value="6">6th Semester</option>
+           <option value="7">7th Semester</option>
+            <option value="8">8th Semester</option>
+            </select>
+
+            <label>Weekly Lectures</label>
+        <input
+             type="number"
+             id="weeklyLectures"
+             min="1"
+             max="40"
+             placeholder="Enter allotted lectures per week"
+             required
+        >
+
+            <button type="button" id="saveFacultyButton">
+                Save Faculty Information
+            </button>
+        </div>
+
+        <div class="card full-width">
+            <h3>🤖 AI Timetable Generator</h3>
+
+           
+<div class="note">
+    Your faculty details and teaching information will help
+    TimeWise AI generate an organized weekly timetable.
+    <br><br>
+    <strong>Feature:</strong> Automatic timetable generation
+    and faculty conflict detection.
+</div>
+
+<button type="button" id="generateTimetableButton">
+    Generate Weekly Timetable
+</button>
+
+<div id="timetableResult"></div>
+<button type="button" id="downloadPDFButton">
+    Download Timetable PDF
+</button>
+        
+
+    </section>
+
+</main>
+
+
+<script>
+    const departmentSelect = document.getElementById("departmentSelect");
+    const semesterSelect = document.getElementById("semesterSelect");
+    const subjectSelect = document.getElementById("subjectSelect");
+
+    // LOAD SUBJECTS
+    async function loadSubjects() {
+        const branch = departmentSelect.value;
+        const semester = semesterSelect.value;
+
+        if (!branch || !semester) {
+            subjectSelect.innerHTML =
+                '<option value="">Select branch and semester</option>';
+            return;
+        }
+
+        subjectSelect.innerHTML =
+            '<option value="">Loading subjects...</option>';
+
+        try {
+            const response = await fetch(
+                `/api/subjects?branch=${encodeURIComponent(branch)}&semester=${semester}`
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || "Unable to load subjects");
+            }
+
+            subjectSelect.innerHTML =
+                '<option value="">Select Subject</option>';
+
+            if (data.subjects.length === 0) {
+                subjectSelect.innerHTML =
+                    '<option value="">No subjects available</option>';
+                return;
+            }
+
+            data.subjects.forEach(subject => {
+                const option = document.createElement("option");
+                option.value = subject.code;
+                option.textContent = `${subject.code} - ${subject.name}`;
+                subjectSelect.appendChild(option);
+            });
+
+        } catch (error) {
+            subjectSelect.innerHTML =
+                '<option value="">Error loading subjects</option>';
+            console.error(error);
+        }
+    }
+
+    departmentSelect.addEventListener("change", loadSubjects);
+    semesterSelect.addEventListener("change", loadSubjects);
+
+
+    // SAVE FACULTY INFORMATION
+    const saveFacultyButton =
+        document.getElementById("saveFacultyButton");
+
+    saveFacultyButton.addEventListener("click", async function () {
+
+        const facultyData = {
+            faculty_name: document.getElementById("facultyName").value.trim(),
+            faculty_id: document.getElementById("facultyId").value.trim(),
+            branch: departmentSelect.value,
+            semester: semesterSelect.value,
+            subject: subjectSelect.value,
+            weekly_lectures: document.getElementById("weeklyLectures").value
+        };
+
+        if (Object.values(facultyData).some(value => value === "")) {
+            alert("Please fill all faculty information!");
+            return;
+        }
+
+        try {
+            const response = await fetch("/api/save-faculty", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(facultyData)
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.error || "Unable to save information");
+            }
+
+            alert(result.message);
+
+        } catch (error) {
+            alert(error.message);
+            console.error(error);
+        }
+    });
+
+
+    // GENERATE WEEKLY TIMETABLE
+    const generateTimetableButton =
+        document.getElementById("generateTimetableButton");
+
+    const timetableResult =
+        document.getElementById("timetableResult");
+
+    generateTimetableButton.addEventListener("click", async function () {
+
+        const branch = departmentSelect.value;
+        const semester = semesterSelect.value;
+
+        if (!branch || !semester) {
+            alert("Please select branch and semester first!");
+            return;
+        }
+
+        generateTimetableButton.disabled = true;
+        generateTimetableButton.textContent = "Generating...";
+
+        try {
+            const response = await fetch(
+                `/api/generate-timetable?branch=${encodeURIComponent(branch)}&semester=${semester}`
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || "Timetable generation failed.");
+            }
+
+            timetableResult.innerHTML = "";
+
+            const table = document.createElement("table");
+            table.className = "weekly-table";
+
+            const header = document.createElement("tr");
+
+            ["Day", "10-11 AM", "11-12 PM", "12-1 PM",
+             "2-3 PM", "3-4 PM", "4-5 PM"].forEach(text => {
+
+                const th = document.createElement("th");
+                th.textContent = text;
+                header.appendChild(th);
+            });
+
+            table.appendChild(header);
+
+            Object.entries(data.timetable).forEach(([day, lectures]) => {
+
+                const row = document.createElement("tr");
+
+                const dayCell = document.createElement("th");
+                dayCell.textContent = day;
+                row.appendChild(dayCell);
+
+                lectures.forEach(lecture => {
+
+                    const td = document.createElement("td");
+
+                    if (lecture.subject === "Free") {
+                        td.textContent = "FREE";
+                        td.className = "free-period";
+                    } else {
+                        td.textContent =
+                            lecture.subject + "\n" + lecture.faculty_name;
+                    }
+
+                    row.appendChild(td);
+                });
+
+                table.appendChild(row);
+            });
+
+            timetableResult.appendChild(table);
+
+            alert("Weekly timetable generated successfully!");
+
+        } catch (error) {
+            alert(error.message);
+            console.error(error);
+
+        } finally {
+            generateTimetableButton.disabled = false;
+            generateTimetableButton.textContent =
+                "Generate Weekly Timetable";
+        }
+    });
+
+
+    // DOWNLOAD PDF
+    const downloadPDFButton =
+        document.getElementById("downloadPDFButton");
+
+    downloadPDFButton.addEventListener("click", function () {
+
+        if (timetableResult.innerHTML.trim() === "") {
+            alert("Please generate the timetable first!");
+            return;
+        }
+
+        window.print();
+    });
+
+</script>
+
+
+</body>
+</html>
+
+

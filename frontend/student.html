@@ -1,0 +1,850 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard | TimeWise AI</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6fb;
+            color: #1e293b;
+        }
+
+        header {
+            background: #172554;
+            color: white;
+            padding: 22px 8%;
+        }
+
+        header h1 {
+            font-size: 27px;
+        }
+
+        header p {
+            margin-top: 6px;
+            color: #cbd5e1;
+        }
+
+        .dashboard {
+            max-width: 1050px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .welcome {
+            margin-bottom: 25px;
+        }
+
+        .welcome h2 {
+            color: #172554;
+            margin-bottom: 8px;
+        }
+
+        .welcome p {
+            color: #64748b;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        }
+
+        .card h3 {
+            margin-bottom: 20px;
+            color: #172554;
+        }
+
+        label {
+            display: block;
+            margin: 14px 0 7px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 15px;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .note {
+            background: #eff6ff;
+            padding: 18px;
+            border-radius: 10px;
+            color: #1e40af;
+            line-height: 1.6;
+        }
+
+        @media(max-width: 700px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: auto;
+            }
+        }
+        @media print {
+
+    body * {
+        visibility: hidden;
+    }
+
+    #studyPlanResult,
+    #studyPlanResult * {
+        visibility: visible;
+    }
+
+    #studyPlanResult {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    #studyPlanResult h2 {
+        text-align: center;
+        color: #172554;
+    }
+
+    #studyPlanResult > div {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    @page {
+        size: A4 portrait;
+        margin: 15mm;
+    }
+}
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>⏰ TimeWise AI</h1>
+    <p>Student Dashboard</p>
+</header>
+
+<main class="dashboard">
+
+    <section class="welcome">
+        <h2>Welcome, Student! 👋</h2>
+        <p>Plan your studies smarter and achieve your academic goals.</p>
+    </section>
+
+    <section class="content">
+
+        <div class="card">
+            <h3>🎓 Student Details</h3>
+
+            <label>Student Name</label>
+<input            
+    type="text"
+    id="studentName"
+    placeholder="Enter your name"
+    required
+>
+
+           <label>Department / Branch</label>
+
+<select id="studentBranch" required>
+    <option value="">Select Branch</option>
+    <option value="CSE">CSE</option>
+    <option value="CSE AI/ML">CSE AI/ML</option>
+    <option value="IT">Information Technology</option>
+    <option value="ECE">Electronics & Communication</option>
+    <option value="Chemical Engineering">Chemical Engineering</option>
+    <option value="Biotechnology">Biotechnology</option>
+</select>
+
+            <label>Semester</label>
+            <select id="studentSemester" required>
+                <option value="">Select Semester</option>
+                <option value="1st">1st Semester</option>
+                <option value="2nd">2nd Semester</option>
+                <option value="3rd">3rd Semester</option>
+                <option value="4th">4th Semester</option>
+                <option value="5th">5th Semester</option>
+                <option value="6th">6th Semester</option>
+                <option value="7th">7th Semester</option>
+                <option value="8th">8th Semester</option>
+            </select>
+
+        </div>
+
+       
+<div class="card">
+    <h3>📚 Study Preferences</h3>
+
+    <label>Enter Subject Name</label>
+    <input
+        type="text"
+        id="subjectInput"
+        placeholder="Example: Mathematics"
+    >
+
+    <button type="button" id="addSubjectButton">
+        + Add Subject
+    </button>
+
+    <div id="subjectList" style="margin-top:20px;">
+        <p style="color:#64748b;">No subjects added yet.</p>
+    </div>
+
+    <label>Daily Study Hours</label>
+    <select id="studyHours">
+        <option value="">Select study hours</option>
+        <option value="2">1-2 Hours</option>
+        <option value="4">3-4 Hours</option>
+        <option value="6">5-6 Hours</option>
+        <option value="8">7-8 Hours</option>
+    </select>
+
+    <label>Upcoming Exam Date</label>
+    <input type="date" id="examDate">
+
+</div>
+
+
+        <div class="card full-width">
+            <h3>🤖 AI Study Planner</h3>
+
+            <div class="note">
+                TimeWise AI will help you organize your subjects,
+                available study hours and upcoming exams.
+
+                <br><br>
+
+                <strong>Coming next:</strong>
+                Personalized study timetable, smart task scheduling
+                and progress tracking.
+            </div>
+<button type="button" id="generateStudyPlanButton">
+    Generate Study Plan
+</button>
+
+<div id="studyPlanResult" style="margin-top:25px;"></div>
+
+<!-- Study Progress Tracker -->
+<div class="card" style="margin-top:25px; grid-column:1/-1;">
+
+    <h3>📊 Study Progress Tracker</h3>
+
+    <p style="color:#64748b;">
+        Track your preparation and monitor completed topics.
+    </p>
+
+    <label>Select Subject</label>
+    <select id="progressSubject">
+        <option value="">Select Subject</option>
+    </select>
+
+    <label>Enter Topic Name</label>
+    <input
+        type="text"
+        id="topicInput"
+        placeholder="Example: Matrices"
+    >
+
+    <button type="button" id="addTopicButton">
+        + Add Topic
+    </button>
+
+    <div id="progressTopicList" style="margin-top:20px;">
+        <p>No topics added yet.</p>
+    </div>
+
+    <h3 style="margin-top:25px;">Overall Progress</h3>
+
+    <h2 id="overallProgress">0%</h2>
+
+    
+<!-- Progress Bar -->
+<div
+    style="width:100%; height:12px; background:#e2e8f0; border-radius:10px; margin-top:12px; overflow:hidden;"
+>
+    <div
+        id="progressBar"
+        style="width:0%; height:100%; background:#16a34a; border-radius:10px;"
+    ></div>
+</div>
+
+<!-- Save and Load Buttons -->
+<button
+    type="button"
+    id="saveStudentDataButton"
+    style="margin-top:25px; background:#2563eb;"
+>
+    💾 Save My Data
+</button>
+
+<button
+    type="button"
+    id="loadStudentDataButton"
+    style="margin-top:15px; background:#7c3aed;"
+>
+    📂 Load My Data
+</button>
+
+<p id="saveStatus" style="margin-top:15px;"></p>
+
+    </div>
+
+</div>
+
+     <button
+    type="button"
+    id="downloadStudyPlanPDF"
+    style="margin-top:20px; background:#16a34a;"
+>
+    📥 Download Study Plan PDF
+</button>       
+        </div>
+
+    </section>
+
+</main>
+
+<script>
+let subjects = [];
+
+const subjectInput = document.getElementById("subjectInput");
+const addSubjectButton = document.getElementById("addSubjectButton");
+const subjectList = document.getElementById("subjectList");
+
+addSubjectButton.addEventListener("click", function () {
+    const subject = subjectInput.value.trim();
+
+    if (subject === "") {
+        alert("Please enter a subject name!");
+        return;
+    }
+
+    if (subjects.includes(subject)) {
+        alert("This subject is already added!");
+        return;
+    }
+
+    subjects.push(subject);
+    subjectInput.value = "";
+
+    displaySubjects();
+});
+
+function displaySubjects() {
+    subjectList.innerHTML = "";
+
+    subjects.forEach(function (subject, index) {
+        const item = document.createElement("div");
+
+        item.style.display = "flex";
+        item.style.justifyContent = "space-between";
+        item.style.alignItems = "center";
+        item.style.padding = "10px";
+        item.style.marginBottom = "8px";
+        item.style.background = "#f1f5f9";
+        item.style.borderRadius = "8px";
+
+        const name = document.createElement("span");
+        name.textContent = subject;
+
+        const removeButton = document.createElement("button");
+        removeButton.textContent = "Remove";
+        removeButton.style.background = "#dc2626";
+
+        removeButton.addEventListener("click", function () {
+            subjects.splice(index, 1);
+            displaySubjects();
+        });
+
+        item.appendChild(name);
+        item.appendChild(removeButton);
+
+        subjectList.appendChild(item);
+    });
+}
+
+
+document.getElementById("generateStudyPlanButton")
+.addEventListener("click", function () {
+
+    const name = document.getElementById("studentName").value.trim();
+    const branch = document.getElementById("studentBranch").value;
+    const semester = document.getElementById("studentSemester").value;
+    const studyHours = Number(document.getElementById("studyHours").value);
+    const examDate = document.getElementById("examDate").value;
+
+    if (!name || !branch || !semester || !studyHours || !examDate) {
+        alert("Please fill all student details and study preferences!");
+        return;
+    }
+
+    if (subjects.length === 0) {
+        alert("Please add at least one subject!");
+        return;
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const exam = new Date(examDate + "T00:00:00");
+
+    if (isNaN(exam.getTime()) || exam < today) {
+        alert("Please select a valid future exam date!");
+        return;
+    }
+document.getElementById("generateStudyPlanButton")
+    const remainingDays = Math.ceil(
+        (exam - today) / (1000 * 60 * 60 * 24)
+    );
+
+    // Get only pending topics
+    const pendingTopics = studyTopics.filter(function(item) {
+        return !item.completed;
+    });
+
+    // Count pending topics for each subject
+    const subjectPriority = {};
+
+    subjects.forEach(function(subject) {
+        subjectPriority[subject] = pendingTopics.filter(function(item) {
+            return item.subject === subject;
+        }).length;
+    });
+
+    // Subjects with more pending topics get higher priority
+    pendingTopics.sort(function(a, b) {
+        return subjectPriority[b.subject] - subjectPriority[a.subject];
+    });
+
+    const result = document.getElementById("studyPlanResult");
+    result.innerHTML = "";
+
+    const heading = document.createElement("h2");
+    heading.textContent = "🧠 Your Smart AI Study Plan";
+    result.appendChild(heading);
+
+    const details = document.createElement("p");
+    details.textContent =
+        name + " | " + branch + " | Semester " + semester;
+    result.appendChild(details);
+
+    const countdown = document.createElement("h3");
+    countdown.textContent =
+        "⏳ " + remainingDays + " days remaining until your exam!";
+    countdown.style.color = "#7c3aed";
+    result.appendChild(countdown);
+
+    const summary = document.createElement("p");
+    summary.textContent =
+        "📚 Daily Study: " + studyHours + " hours | " +
+        "Pending Topics: " + pendingTopics.length +
+        " | Completed Topics: " +
+        studyTopics.filter(function(item) {
+            return item.completed;
+        }).length;
+
+    result.appendChild(summary);
+
+    const days = [
+        "Monday", "Tuesday", "Wednesday",
+        "Thursday", "Friday", "Saturday"
+    ];
+
+    let topicIndex = 0;
+
+    // Track subject-wise study sessions
+const sessionDistribution = {};
+
+subjects.forEach(function(subject) {
+    sessionDistribution[subject] = 0;
+});
+    days.forEach(function(day) {
+
+        const dayCard = document.createElement("div");
+
+        dayCard.style.background = "#f1f5f9";
+        dayCard.style.padding = "15px";
+        dayCard.style.marginTop = "15px";
+        dayCard.style.borderRadius = "10px";
+
+        const dayHeading = document.createElement("h3");
+        dayHeading.textContent = "📅 " + day;
+        dayCard.appendChild(dayHeading);
+
+        for (let hour = 0; hour < studyHours; hour++) {
+
+            const session = document.createElement("p");
+
+            if (topicIndex < pendingTopics.length) {
+
+                const topic = pendingTopics[topicIndex];
+
+                session.textContent =
+                    "📖 Session " + (hour + 1) + ": " +
+                    topic.subject + " — " + topic.topic;
+                sessionDistribution[topic.subject]++;
+                topicIndex++;
+
+            } else {
+
+                const revisionSubject =
+                    subjects[(hour + days.indexOf(day)) % subjects.length];
+
+                session.textContent =
+                    "🔄 Session " + (hour + 1) +
+                    ": Revision and Practice — " + revisionSubject;
+            }
+
+            dayCard.appendChild(session);
+        }
+
+        result.appendChild(dayCard);
+    });
+
+    const note = document.createElement("p");
+    note.textContent =
+        "💡 Tip: Complete your pending topics first, then use revision sessions for practice and exam preparation.";
+
+    note.style.marginTop = "20px";
+    note.style.fontWeight = "bold";
+
+    result.appendChild(note);
+
+// Subject-wise Study Distribution
+
+const distributionHeading = document.createElement("h3");
+distributionHeading.textContent = "📊 Subject-wise Study Distribution";
+distributionHeading.style.marginTop = "25px";
+
+result.appendChild(distributionHeading);
+
+subjects.forEach(function(subject) {
+
+    const subjectRow = document.createElement("p");
+
+    subjectRow.textContent =
+        "📚 " + subject + " — " +
+        sessionDistribution[subject] + " study sessions";
+
+    result.appendChild(subjectRow);
+});
+
+
+    result.scrollIntoView({ behavior: "smooth" });
+
+});
+
+
+
+document.getElementById("downloadStudyPlanPDF")
+.addEventListener("click", function () {
+
+    const result = document.getElementById("studyPlanResult");
+
+    if (result.innerHTML.trim() === "") {
+        alert("Please generate your study plan first!");
+        return;
+    }
+
+    window.print();
+});
+
+// Study Progress Tracker
+
+let studyTopics = [];
+
+const progressSubject = document.getElementById("progressSubject");
+const topicInput = document.getElementById("topicInput");
+const addTopicButton = document.getElementById("addTopicButton");
+const progressTopicList = document.getElementById("progressTopicList");
+
+// Update subject dropdown
+function updateProgressSubjects() {
+    const selectedValue = progressSubject.value;
+
+    progressSubject.innerHTML =
+        '<option value="">Select Subject</option>';
+
+    subjects.forEach(function(subject) {
+        const option = document.createElement("option");
+        option.value = subject;
+        option.textContent = subject;
+        progressSubject.appendChild(option);
+    });
+
+    if (subjects.includes(selectedValue)) {
+        progressSubject.value = selectedValue;
+    }
+}
+
+// Update dropdown whenever a subject is added
+addSubjectButton.addEventListener("click", function() {
+    updateProgressSubjects();
+});
+
+// Add a new topic
+addTopicButton.addEventListener("click", function() {
+
+    const subject = progressSubject.value;
+    const topic = topicInput.value.trim();
+
+    if (!subject) {
+        alert("Please select a subject!");
+        return;
+    }
+
+    if (!topic) {
+        alert("Please enter a topic name!");
+        return;
+    }
+
+    const alreadyExists = studyTopics.some(function(item) {
+        return item.subject === subject &&
+               item.topic.toLowerCase() === topic.toLowerCase();
+    });
+
+    if (alreadyExists) {
+        alert("This topic already exists!");
+        return;
+    }
+
+    studyTopics.push({
+        subject: subject,
+        topic: topic,
+        completed: false
+    });
+
+    topicInput.value = "";
+
+    displayProgressTopics();
+});
+
+// Display topics
+function displayProgressTopics() {
+
+    progressTopicList.innerHTML = "";
+
+    if (studyTopics.length === 0) {
+        progressTopicList.textContent = "No topics added yet.";
+    }
+
+    studyTopics.forEach(function(item, index) {
+
+        const row = document.createElement("div");
+
+        row.style.display = "flex";
+        row.style.justifyContent = "space-between";
+        row.style.alignItems = "center";
+        row.style.padding = "12px";
+        row.style.marginBottom = "10px";
+        row.style.background = "#f1f5f9";
+        row.style.borderRadius = "8px";
+
+        const topicName = document.createElement("span");
+
+        topicName.textContent =
+            item.subject + " — " + item.topic;
+
+        if (item.completed) {
+            topicName.style.textDecoration = "line-through";
+            topicName.style.color = "#16a34a";
+        }
+
+        const completeButton = document.createElement("button");
+
+        completeButton.textContent =
+            item.completed ? "Completed ✓" : "Mark Complete";
+
+        completeButton.style.background =
+            item.completed ? "#64748b" : "#16a34a";
+
+        completeButton.addEventListener("click", function() {
+            studyTopics[index].completed =
+                !studyTopics[index].completed;
+
+            displayProgressTopics();
+        });
+
+        row.appendChild(topicName);
+        row.appendChild(completeButton);
+
+        progressTopicList.appendChild(row);
+    });
+
+    updateOverallProgress();
+}
+
+// Calculate overall progress
+function updateOverallProgress() {
+
+    const total = studyTopics.length;
+
+    const completed = studyTopics.filter(function(item) {
+        return item.completed;
+    }).length;
+
+    const percentage = total === 0
+        ? 0
+        : Math.round((completed / total) * 100);
+
+    document.getElementById("overallProgress").textContent =
+        percentage + "%";
+
+    document.getElementById("progressBar").style.width =
+        percentage + "%";
+}
+
+updateProgressSubjects();
+displayProgressTopics();
+
+
+// Save Student Data to Flask Backend
+
+document.getElementById("saveStudentDataButton")
+.addEventListener("click", async function () {
+
+    const studentData = {
+        studentName: document.getElementById("studentName").value.trim(),
+        branch: document.getElementById("studentBranch").value,
+        semester: document.getElementById("studentSemester").value,
+        studyHours: document.getElementById("studyHours").value,
+        examDate: document.getElementById("examDate").value,
+        subjects: subjects,
+        studyTopics: studyTopics
+    };
+
+    if (!studentData.studentName ||
+        !studentData.branch ||
+        !studentData.semester) {
+
+        alert("Please fill your student details first!");
+        return;
+    }
+
+    const saveStatus = document.getElementById("saveStatus");
+
+    saveStatus.textContent = "Saving your data...";
+
+    try {
+        const response = await fetch("/api/save-student-data", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(studentData)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || "Unable to save data");
+        }
+
+        saveStatus.textContent = "✅ " + result.message;
+        saveStatus.style.color = "green";
+
+    } catch (error) {
+        saveStatus.textContent = "❌ " + error.message;
+        saveStatus.style.color = "red";
+    }
+});
+
+// Load Student Data from Flask Backend
+
+document.getElementById("loadStudentDataButton")
+.addEventListener("click", async function () {
+
+    const studentName =
+        document.getElementById("studentName").value.trim();
+
+    if (!studentName) {
+        alert("Please enter your student name first!");
+        return;
+    }
+
+    const saveStatus = document.getElementById("saveStatus");
+    saveStatus.textContent = "Loading your data...";
+
+    try {
+        const response = await fetch(
+            `/api/get-student-data?studentName=${encodeURIComponent(studentName)}`
+        );
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || "Unable to load data");
+        }
+
+        const data = result.data;
+
+        document.getElementById("studentName").value = data.studentName || "";
+        document.getElementById("studentBranch").value = data.branch || "";
+        document.getElementById("studentSemester").value = data.semester || "";
+        document.getElementById("studyHours").value = data.studyHours || "2";
+        document.getElementById("examDate").value = data.examDate || "";
+
+        subjects = Array.isArray(data.subjects) ? data.subjects : [];
+        displaySubjects();
+
+        studyTopics = Array.isArray(data.studyTopics) ? data.studyTopics : [];
+
+        updateProgressSubjects();
+        displayProgressTopics();
+
+        saveStatus.textContent = "✅ Your saved data loaded successfully!";
+        saveStatus.style.color = "green";
+
+    } catch (error) {
+        saveStatus.textContent = "❌ " + error.message;
+        saveStatus.style.color = "red";
+    }
+});
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,34 @@
+[
+    {
+        "faculty_name": "Dr. Om hari",
+        "faculty_id": "22",
+        "branch": "CSE AI/ML",
+        "semester": 1,
+        "subject": "AAS102D",
+        "weekly_lectures": 3
+    },
+    {
+        "faculty_name": "abc",
+        "faculty_id": "11",
+        "branch": "IT",
+        "semester": 1,
+        "subject": "AEC101A",
+        "weekly_lectures": 4
+    },
+    {
+        "faculty_name": "abc",
+        "faculty_id": "12",
+        "branch": "IT",
+        "semester": 1,
+        "subject": "AAS152D",
+        "weekly_lectures": 2
+    },
+    {
+        "faculty_name": "abc",
+        "faculty_id": "1",
+        "branch": "CSE AI/ML",
+        "semester": 1,
+        "subject": "AAI101",
+        "weekly_lectures": 1
+    }
+]

@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TimeWise AI</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6fb;
+            color: #1e293b;
+        }
+
+        header {
+            background: #172554;
+            color: white;
+            padding: 22px 8%;
+        }
+
+        header h1 {
+            font-size: 28px;
+        }
+
+        header p {
+            margin-top: 6px;
+            color: #cbd5e1;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 65px 20px 35px;
+        }
+
+        .hero h2 {
+            font-size: 36px;
+            margin-bottom: 15px;
+            color: #172554;
+        }
+
+        .hero p {
+            font-size: 17px;
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            padding: 35px 20px 70px;
+        }
+
+        .card {
+            background: white;
+            width: 320px;
+            padding: 35px 25px;
+            border-radius: 18px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.07);
+        }
+
+        .card .emoji {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .card h3 {
+            font-size: 23px;
+            margin-bottom: 12px;
+        }
+
+        .card p {
+            color: #64748b;
+            line-height: 1.6;
+            min-height: 75px;
+        }
+
+        .card button {
+            margin-top: 22px;
+            padding: 13px 25px;
+            border: none;
+            border-radius: 9px;
+            background: #2563eb;
+            color: white;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .card button:hover {
+            background: #1d4ed8;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #64748b;
+        }
+
+        @media (max-width: 600px) {
+            .hero h2 {
+                font-size: 28px;
+            }
+
+            header {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>⏰ TimeWise AI</h1>
+        <p>Smart Time Management & Scheduling System</p>
+    </header>
+
+    <section class="hero">
+        <h2>Manage Your Time Smarter</h2>
+        <p>
+            Plan better, organize your schedule and make every minute count
+            with TimeWise AI.
+        </p>
+    </section>
+
+    <section class="container">
+
+        <div class="card">
+            <div class="emoji">👨‍🏫</div>
+            <h3>Faculty Dashboard</h3>
+            <p>
+                Manage faculty schedules, organize lectures
+                and generate smart timetables.
+            </p>
+            <button onclick="window.location.href='/faculty'">
+            Enter as Faculty
+             </button>
+        </div>
+
+        <div class="card">
+            <div class="emoji">🎓</div>
+            <h3>Student Dashboard</h3>
+            <p>
+                Organize your subjects, plan study sessions
+                and manage your daily routine.
+            </p>
+            <button onclick="window.location.href='/student'">
+             Enter as Student
+             </button>
+        </div>
+
+    </section>
+
+    <footer>
+        © 2026 TimeWise AI | Smart Scheduling Made Simple
+    </footer>
+
+</body>
+</html>

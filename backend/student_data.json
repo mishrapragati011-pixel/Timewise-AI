@@ -1,0 +1,53 @@
+{
+    "students": [
+        {
+            "studentName": "aa",
+            "branch": "CSE",
+            "semester": "1st",
+            "studyHours": "4",
+            "examDate": "2026-12-10",
+            "subjects": [
+                "a",
+                "c",
+                "s"
+            ],
+            "studyTopics": [
+                {
+                    "subject": "a",
+                    "topic": "ss",
+                    "completed": false
+                },
+                {
+                    "subject": "a",
+                    "topic": "s",
+                    "completed": false
+                },
+                {
+                    "subject": "a",
+                    "topic": "a",
+                    "completed": true
+                },
+                {
+                    "subject": "a",
+                    "topic": "aaa",
+                    "completed": true
+                },
+                {
+                    "subject": "a",
+                    "topic": "cc",
+                    "completed": true
+                },
+                {
+                    "subject": "a",
+                    "topic": "c",
+                    "completed": false
+                },
+                {
+                    "subject": "a",
+                    "topic": "cx",
+                    "completed": false
+                }
+            ]
+        }
+    ]
+}
