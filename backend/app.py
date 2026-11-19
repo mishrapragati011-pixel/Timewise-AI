@@ -27,7 +27,7 @@ try:
         GeminiAPIError,
     )
 except ImportError:
-    from gemini_service import (
+    from backend.gemini_service import (
         generate_study_assistant_response,
         generate_adaptive_study_plan,
         GeminiConfigError,
