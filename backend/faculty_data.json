@@ -24,11 +24,35 @@
         "weekly_lectures": 2
     },
     {
-        "faculty_name": "abc",
+        "faculty_name": "aa",
         "faculty_id": "1",
-        "branch": "CSE AI/ML",
+        "branch": "CSE",
         "semester": 1,
-        "subject": "AAI101",
-        "weekly_lectures": 1
+        "subject": "AAS151",
+        "weekly_lectures": 5
+    },
+    {
+        "faculty_name": "aaaaa",
+        "faculty_id": "2",
+        "branch": "CSE",
+        "semester": 1,
+        "subject": "AAS101E",
+        "weekly_lectures": 3
+    },
+    {
+        "faculty_name": "aaaa",
+        "faculty_id": "3",
+        "branch": "CSE",
+        "semester": 1,
+        "subject": "AAS102D",
+        "weekly_lectures": 4
+    },
+    {
+        "faculty_name": "aaaaaa",
+        "faculty_id": "4",
+        "branch": "CSE",
+        "semester": 1,
+        "subject": "AEE101A",
+        "weekly_lectures": 4
     }
 ]

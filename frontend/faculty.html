@@ -256,6 +256,130 @@
 }
 
 
+
+/* ── Workload Analytics ── */
+.faculty-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 14px;
+    margin: 20px 0;
+}
+.faculty-stat-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.fac-stat-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+.fac-stat-label {
+    font-size: 11px;
+    color: #64748b;
+    margin-bottom: 2px;
+}
+.fac-stat-value {
+    font-size: 22px;
+    font-weight: bold;
+    color: #172554;
+}
+
+/* ── Conflict highlight ── */
+.conflict-cell {
+    background: #fef2f2 !important;
+    border: 2px solid #ef4444 !important;
+}
+.conflict-banner {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-top: 12px;
+    color: #991b1b;
+    font-size: 14px;
+}
+.conflict-ok-banner {
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-top: 10px;
+    color: #065f46;
+    font-size: 13px;
+}
+
+/* ── Subject distribution list ── */
+.subj-dist-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: #f1f5f9;
+    border-radius: 6px;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+.subj-dist-count {
+    font-weight: bold;
+    color: #2563eb;
+}
+
+/* ── Editable timetable cell ── */
+.editable-cell {
+    cursor: pointer;
+    position: relative;
+}
+.editable-cell:hover {
+    background: #eff6ff !important;
+}
+.cell-edit-hint {
+    display: block;
+    font-size: 9px;
+    color: #94a3b8;
+    margin-top: 2px;
+}
+.cell-edit-form input {
+    width: 100%;
+    font-size: 11px;
+    padding: 3px 5px;
+    margin-bottom: 3px;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+.cell-edit-actions {
+    display: flex;
+    gap: 4px;
+    margin-top: 2px;
+}
+.cell-edit-actions button {
+    font-size: 10px;
+    padding: 3px 8px;
+    margin-top: 0;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.btn-cell-save  { background: #2563eb; color: white; border: none; }
+.btn-cell-cancel{ background: #64748b; color: white; border: none; }
+
+/* ── Print: hide analytics and edit UI ── */
+@media print {
+    #workloadAnalytics,
+    .cell-edit-hint,
+    .cell-edit-form,
+    .cell-edit-actions { display: none !important; }
+}
+
     </style>
 </head>
 
@@ -318,8 +442,6 @@
             </select>
             <label>Class / Semester</label>
             <select id="semesterSelect">
-                <option value="">Select Semester</option>
-                
              <option value="">Select Semester</option>
              <option value="1">1st Semester</option>
             <option value="2">2nd Semester</option>
@@ -362,11 +484,48 @@
     Generate Weekly Timetable
 </button>
 
+<!-- ── Workload Analytics (shown after timetable generated) ── -->
+<div id="workloadAnalytics" style="display:none; margin-top:24px;">
+    <h4 style="color:#172554; margin-bottom:14px; font-size:16px;">📊 Faculty Workload Analytics</h4>
+
+    <div class="faculty-stats-grid">
+        <div class="faculty-stat-card">
+            <div class="fac-stat-icon" style="background:#eff6ff; color:#2563eb;">📅</div>
+            <div>
+                <div class="fac-stat-label">Scheduled Lectures</div>
+                <div class="fac-stat-value" id="statScheduled">0</div>
+            </div>
+        </div>
+        <div class="faculty-stat-card">
+            <div class="fac-stat-icon" style="background:#f0fdf4; color:#16a34a;">⏱️</div>
+            <div>
+                <div class="fac-stat-label">Weekly Teaching Hours</div>
+                <div class="fac-stat-value" id="statHours">0h</div>
+            </div>
+        </div>
+        <div class="faculty-stat-card">
+            <div class="fac-stat-icon" style="background:#fffbeb; color:#d97706;">🕐</div>
+            <div>
+                <div class="fac-stat-label">Free Periods</div>
+                <div class="fac-stat-value" id="statFree">0</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Subject-wise lecture distribution -->
+    <div id="subjectDistribution" style="margin-top:14px;"></div>
+
+    <!-- Conflict detection banner -->
+    <div id="conflictBanner"></div>
+</div>
+
 <div id="timetableResult"></div>
+
 <button type="button" id="downloadPDFButton">
     Download Timetable PDF
 </button>
-        
+
+        </div><!-- /.card.full-width -->
 
     </section>
 
@@ -474,6 +633,9 @@
     });
 
 
+    // ── Module-level timetable store (for analytics + editing) ──
+    let currentTimetableData = null;
+
     // GENERATE WEEKLY TIMETABLE
     const generateTimetableButton =
         document.getElementById("generateTimetableButton");
@@ -505,50 +667,9 @@
                 throw new Error(data.error || "Timetable generation failed.");
             }
 
-            timetableResult.innerHTML = "";
-
-            const table = document.createElement("table");
-            table.className = "weekly-table";
-
-            const header = document.createElement("tr");
-
-            ["Day", "10-11 AM", "11-12 PM", "12-1 PM",
-             "2-3 PM", "3-4 PM", "4-5 PM"].forEach(text => {
-
-                const th = document.createElement("th");
-                th.textContent = text;
-                header.appendChild(th);
-            });
-
-            table.appendChild(header);
-
-            Object.entries(data.timetable).forEach(([day, lectures]) => {
-
-                const row = document.createElement("tr");
-
-                const dayCell = document.createElement("th");
-                dayCell.textContent = day;
-                row.appendChild(dayCell);
-
-                lectures.forEach(lecture => {
-
-                    const td = document.createElement("td");
-
-                    if (lecture.subject === "Free") {
-                        td.textContent = "FREE";
-                        td.className = "free-period";
-                    } else {
-                        td.textContent =
-                            lecture.subject + "\n" + lecture.faculty_name;
-                    }
-
-                    row.appendChild(td);
-                });
-
-                table.appendChild(row);
-            });
-
-            timetableResult.appendChild(table);
+            currentTimetableData = data.timetable;
+            renderTimetable(currentTimetableData);
+            computeAndShowAnalytics(currentTimetableData);
 
             alert("Weekly timetable generated successfully!");
 
@@ -562,6 +683,287 @@
                 "Generate Weekly Timetable";
         }
     });
+
+
+    // ── Render timetable with editable cells ──
+    function renderTimetable(timetable) {
+        timetableResult.innerHTML = "";
+
+        const table = document.createElement("table");
+        table.className = "weekly-table";
+
+        const header = document.createElement("tr");
+        ["Day", "10-11 AM", "11-12 PM", "12-1 PM",
+         "2-3 PM", "3-4 PM", "4-5 PM"].forEach(text => {
+            const th = document.createElement("th");
+            th.textContent = text;
+            header.appendChild(th);
+        });
+        table.appendChild(header);
+
+        Object.entries(timetable).forEach(([day, lectures]) => {
+            const row = document.createElement("tr");
+
+            const dayCell = document.createElement("th");
+            dayCell.textContent = day;
+            row.appendChild(dayCell);
+
+            lectures.forEach((lecture, periodIdx) => {
+                const td = document.createElement("td");
+
+                if (lecture.subject === "Free") {
+                    td.textContent = "FREE";
+                    td.className = "free-period";
+                } else {
+                    const subjSpan = document.createElement("span");
+                    subjSpan.textContent = lecture.subject + "\n" + lecture.faculty_name;
+                    td.appendChild(subjSpan);
+
+                    const hint = document.createElement("span");
+                    hint.className = "cell-edit-hint";
+                    hint.textContent = "✏️ double-click to edit";
+                    td.appendChild(hint);
+
+                    td.className = "editable-cell";
+                    td.dataset.day = day;
+                    td.dataset.period = periodIdx;
+
+                    td.addEventListener("dblclick", function () {
+                        openCellEditor(td, day, periodIdx, lecture);
+                    });
+                }
+
+                row.appendChild(td);
+            });
+
+            table.appendChild(row);
+        });
+
+        timetableResult.appendChild(table);
+    }
+
+
+    // ── Compute workload analytics and conflict detection ──
+    function computeAndShowAnalytics(timetable) {
+        const allLectures = Object.values(timetable).flat();
+        const scheduled = allLectures.filter(l => l.subject !== "Free");
+        const free      = allLectures.filter(l => l.subject === "Free");
+
+        document.getElementById("statScheduled").textContent = scheduled.length;
+        document.getElementById("statHours").textContent    = scheduled.length + "h";
+        document.getElementById("statFree").textContent     = free.length;
+
+        // ── Subject-wise lecture distribution ──
+        const subjectCount = {};
+        scheduled.forEach(l => {
+            subjectCount[l.subject] = (subjectCount[l.subject] || 0) + 1;
+        });
+
+        const distContainer = document.getElementById("subjectDistribution");
+        distContainer.innerHTML = "";
+
+        if (Object.keys(subjectCount).length > 0) {
+            const heading = document.createElement("h5");
+            heading.textContent = "Subject-wise Lecture Distribution";
+            heading.style.cssText = "color:#172554; margin-bottom:8px; font-size:14px;";
+            distContainer.appendChild(heading);
+
+            Object.entries(subjectCount)
+                .sort((a, b) => b[1] - a[1])
+                .forEach(([subj, count]) => {
+                    const item = document.createElement("div");
+                    item.className = "subj-dist-item";
+
+                    const nameSpan = document.createElement("span");
+                    nameSpan.textContent = subj;
+
+                    const countSpan = document.createElement("span");
+                    countSpan.className = "subj-dist-count";
+                    countSpan.textContent = count + (count === 1 ? " lecture" : " lectures");
+
+                    item.appendChild(nameSpan);
+                    item.appendChild(countSpan);
+                    distContainer.appendChild(item);
+                });
+        }
+
+        // ── Conflict detection ──
+        // Map: "day|period" → list of faculty_id values
+        const slotFacultyMap = {};
+        const conflicts = [];
+
+        Object.entries(timetable).forEach(([day, lectures]) => {
+            lectures.forEach((lecture, pIdx) => {
+                if (lecture.subject === "Free" || !lecture.faculty_id) return;
+                const key = day + "|" + pIdx;
+                if (!slotFacultyMap[key]) slotFacultyMap[key] = [];
+                if (slotFacultyMap[key].includes(lecture.faculty_id)) {
+                    conflicts.push(
+                        `${lecture.faculty_name} (ID: ${lecture.faculty_id}) ` +
+                        `is double-booked on ${day}, Period ${pIdx + 1}`
+                    );
+                }
+                slotFacultyMap[key].push(lecture.faculty_id);
+            });
+        });
+
+        const conflictBanner = document.getElementById("conflictBanner");
+        conflictBanner.innerHTML = "";
+
+        if (conflicts.length > 0) {
+            const banner = document.createElement("div");
+            banner.className = "conflict-banner";
+
+            const title = document.createElement("strong");
+            title.textContent = "⚠️ Scheduling Conflicts Detected:";
+            banner.appendChild(title);
+
+            const ul = document.createElement("ul");
+            ul.style.cssText = "margin-top:6px; padding-left:18px;";
+            conflicts.forEach(msg => {
+                const li = document.createElement("li");
+                li.textContent = msg;
+                ul.appendChild(li);
+            });
+            banner.appendChild(ul);
+            conflictBanner.appendChild(banner);
+
+            // Highlight conflicted cells in the rendered table
+            highlightConflictedCells(timetable);
+        } else if (scheduled.length > 0) {
+            const ok = document.createElement("div");
+            ok.className = "conflict-ok-banner";
+            ok.textContent = "✅ No scheduling conflicts detected. All faculty assignments are valid.";
+            conflictBanner.appendChild(ok);
+        }
+
+        document.getElementById("workloadAnalytics").style.display = "block";
+    }
+
+
+    // ── Highlight conflicted cells in the rendered table ──
+    function highlightConflictedCells(timetable) {
+        const slotFacultyMap = {};
+        const conflictedKeys = new Set();
+
+        Object.entries(timetable).forEach(([day, lectures]) => {
+            lectures.forEach((lecture, pIdx) => {
+                if (lecture.subject === "Free" || !lecture.faculty_id) return;
+                const key = day + "|" + pIdx;
+                if (!slotFacultyMap[key]) slotFacultyMap[key] = [];
+                if (slotFacultyMap[key].includes(lecture.faculty_id)) {
+                    conflictedKeys.add(key);
+                }
+                slotFacultyMap[key].push(lecture.faculty_id);
+            });
+        });
+
+        if (conflictedKeys.size === 0) return;
+
+        // Scan rendered table cells
+        const tds = timetableResult.querySelectorAll("td.editable-cell");
+        tds.forEach(td => {
+            const key = td.dataset.day + "|" + td.dataset.period;
+            if (conflictedKeys.has(key)) {
+                td.classList.add("conflict-cell");
+            }
+        });
+    }
+
+
+    // ── Inline cell editor ──
+    function openCellEditor(td, day, periodIdx, lecture) {
+        // Capture original display text from first child span (or td directly)
+        const originalSubj = lecture.subject;
+        const originalFac  = lecture.faculty_name;
+
+        // Clear cell, build edit form
+        td.innerHTML = "";
+
+        const form = document.createElement("div");
+        form.className = "cell-edit-form";
+
+        const subjInput = document.createElement("input");
+        subjInput.type        = "text";
+        subjInput.value       = originalSubj;
+        subjInput.placeholder = "Subject code";
+
+        const facInput = document.createElement("input");
+        facInput.type        = "text";
+        facInput.value       = originalFac;
+        facInput.placeholder = "Faculty name";
+
+        const actions = document.createElement("div");
+        actions.className = "cell-edit-actions";
+
+        const saveBtn = document.createElement("button");
+        saveBtn.textContent = "Save";
+        saveBtn.className   = "btn-cell-save";
+
+        const cancelBtn = document.createElement("button");
+        cancelBtn.textContent = "Cancel";
+        cancelBtn.className   = "btn-cell-cancel";
+
+        actions.appendChild(saveBtn);
+        actions.appendChild(cancelBtn);
+
+        form.appendChild(subjInput);
+        form.appendChild(facInput);
+        form.appendChild(actions);
+        td.appendChild(form);
+        subjInput.focus();
+
+        // ── Save handler ──
+        saveBtn.addEventListener("click", function () {
+            const newSubj = subjInput.value.trim() || originalSubj;
+            const newFac  = facInput.value.trim()  || originalFac;
+
+            // Update in-memory data
+            if (currentTimetableData &&
+                currentTimetableData[day] &&
+                currentTimetableData[day][periodIdx]) {
+                currentTimetableData[day][periodIdx].subject      = newSubj;
+                currentTimetableData[day][periodIdx].faculty_name = newFac;
+            }
+
+            // Rebuild cell content
+            rebuildCellContent(td, day, periodIdx, {
+                subject: newSubj,
+                faculty_name: newFac,
+                faculty_id: lecture.faculty_id
+            });
+
+            // Recompute analytics (manual edit may introduce/resolve conflicts)
+            computeAndShowAnalytics(currentTimetableData);
+        });
+
+        // ── Cancel handler ──
+        cancelBtn.addEventListener("click", function () {
+            rebuildCellContent(td, day, periodIdx, lecture);
+        });
+    }
+
+
+    // ── Restore / build a non-free cell after editing ──
+    function rebuildCellContent(td, day, periodIdx, lecture) {
+        td.innerHTML   = "";
+        td.className   = "editable-cell";
+        td.dataset.day    = day;
+        td.dataset.period = periodIdx;
+
+        const subjSpan = document.createElement("span");
+        subjSpan.textContent = lecture.subject + "\n" + lecture.faculty_name;
+        td.appendChild(subjSpan);
+
+        const hint = document.createElement("span");
+        hint.className   = "cell-edit-hint";
+        hint.textContent = "✏️ double-click to edit";
+        td.appendChild(hint);
+
+        td.addEventListener("dblclick", function () {
+            openCellEditor(td, day, periodIdx, lecture);
+        });
+    }
 
 
     // DOWNLOAD PDF

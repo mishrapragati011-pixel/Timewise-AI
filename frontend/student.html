@@ -157,6 +157,478 @@
         margin: 15mm;
     }
 }
+
+        /* AI Study Assistant Chat Widget Styles */
+        .ai-chat-toggle-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #172554;
+            color: white;
+            border: none;
+            padding: 13px 22px;
+            border-radius: 50px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(23, 37, 84, 0.35);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+        }
+
+        .ai-chat-toggle-btn:hover {
+            background: #1e3a8a;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(23, 37, 84, 0.45);
+        }
+
+        .ai-chat-panel {
+            position: fixed;
+            bottom: 85px;
+            right: 24px;
+            width: 390px;
+            max-width: calc(100vw - 32px);
+            height: 560px;
+            max-height: calc(100vh - 110px);
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.16);
+            border: 1px solid #e2e8f0;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1000;
+            animation: aiChatSlideUp 0.22s ease-out;
+        }
+
+        @keyframes aiChatSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .ai-chat-panel.active {
+            display: flex;
+        }
+
+        .ai-chat-header {
+            background: #172554;
+            color: white;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ai-chat-header-info h4 {
+            font-size: 16px;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ai-chat-header-info p {
+            font-size: 12px;
+            color: #cbd5e1;
+            margin-top: 3px;
+        }
+
+        .ai-chat-close-btn {
+            background: transparent;
+            color: #cbd5e1;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 6px;
+            margin: 0;
+            line-height: 1;
+            transition: background 0.15s, color 0.15s;
+        }
+
+        .ai-chat-close-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+        .ai-chat-prompts-bar {
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 10px 14px;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: thin;
+        }
+
+        .ai-chat-prompts-bar::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .ai-chat-prompts-bar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .ai-prompt-chip {
+            background: white;
+            border: 1px solid #cbd5e1;
+            color: #1e40af;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+            margin: 0;
+            transition: all 0.15s;
+        }
+
+        .ai-prompt-chip:hover {
+            background: #eff6ff;
+            border-color: #3b82f6;
+            color: #1d4ed8;
+        }
+
+        .ai-chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: #fafafa;
+        }
+
+        .ai-msg {
+            max-width: 85%;
+            padding: 11px 15px;
+            border-radius: 12px;
+            font-size: 13.5px;
+            line-height: 1.5;
+            word-break: break-word;
+            white-space: pre-wrap;
+        }
+
+        .ai-msg-user {
+            align-self: flex-end;
+            background: #2563eb;
+            color: white;
+            border-bottom-right-radius: 3px;
+        }
+
+        .ai-msg-assistant {
+            align-self: flex-start;
+            background: white;
+            color: #1e293b;
+            border: 1px solid #e2e8f0;
+            border-bottom-left-radius: 3px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+        }
+
+        .ai-msg-error {
+            align-self: flex-start;
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+            border-bottom-left-radius: 3px;
+        }
+
+        .ai-typing-indicator {
+            align-self: flex-start;
+            background: white;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            border-bottom-left-radius: 3px;
+            padding: 10px 14px;
+            font-size: 13px;
+            display: none;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .ai-typing-dots {
+            display: inline-flex;
+            gap: 4px;
+        }
+
+        .ai-typing-dot {
+            width: 6px;
+            height: 6px;
+            background: #2563eb;
+            border-radius: 50%;
+            animation: aiDotBlink 1.4s infinite both;
+        }
+
+        .ai-typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .ai-typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes aiDotBlink {
+            0%, 80%, 100% {
+                opacity: 0.2;
+                transform: scale(0.8);
+            }
+            40% {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+        }
+
+        .ai-chat-input-area {
+            padding: 12px 14px;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .ai-chat-input-area textarea {
+            flex: 1;
+            resize: none;
+            height: 42px;
+            max-height: 100px;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 13.5px;
+            font-family: inherit;
+            line-height: 1.4;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .ai-chat-input-area textarea:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+        }
+
+        .ai-chat-send-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            margin: 0;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s;
+        }
+
+        .ai-chat-send-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .ai-chat-send-btn:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 600px) {
+            .ai-chat-panel {
+                right: 12px;
+                bottom: 80px;
+                width: calc(100vw - 24px);
+                height: calc(100vh - 100px);
+            }
+            .ai-chat-toggle-btn {
+                bottom: 16px;
+                right: 16px;
+                padding: 12px 18px;
+                font-size: 14px;
+            }
+        }
+
+        #optimizeWithGeminiButton {
+            background: #7c3aed;
+            color: white;
+            transition: background 0.15s, transform 0.15s;
+        }
+
+        #optimizeWithGeminiButton:hover {
+            background: #6d28d9 !important;
+        }
+
+        .adaptive-session-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 3px 8px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-right: 8px;
+        }
+
+        .badge-learn {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-practice {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-revision {
+            background: #f3e8ff;
+            color: #6b21a8;
+        }
+
+        /* Student Performance Analytics Styles */
+        .analytics-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .analytics-stat-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .analytics-stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .stat-data {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 22px;
+            font-weight: bold;
+            color: #1e293b;
+            margin-top: 2px;
+        }
+
+        .analytics-dual-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .analytics-dual-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .analytics-sub-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 18px;
+        }
+
+        .subject-perf-item {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px 14px;
+        }
+
+        .subject-perf-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .subject-perf-name {
+            font-weight: bold;
+            font-size: 14px;
+            color: #172554;
+        }
+
+        .subject-perf-pct {
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .subject-perf-sub {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 6px;
+        }
+
+        .insight-pill {
+            padding: 12px 14px;
+            border-radius: 8px;
+            font-size: 13.5px;
+            line-height: 1.5;
+        }
+
+        .insight-best {
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            color: #065f46;
+        }
+
+        .insight-attention {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            color: #92400e;
+        }
+
+        .insight-recommendation {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1e40af;
+        }
+
+        @media print {
+            .ai-chat-toggle-btn,
+            .ai-chat-panel {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 
@@ -261,9 +733,14 @@
                 Personalized study timetable, smart task scheduling
                 and progress tracking.
             </div>
-<button type="button" id="generateStudyPlanButton">
-    Generate Study Plan
-</button>
+<div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px;">
+    <button type="button" id="generateStudyPlanButton" style="margin-top:0;">
+        Generate Study Plan
+    </button>
+    <button type="button" id="optimizeWithGeminiButton" style="margin-top:0;">
+        ✨ Optimize with Gemini
+    </button>
+</div>
 
 <div id="studyPlanResult" style="margin-top:25px;"></div>
 
@@ -343,9 +820,135 @@
 </button>       
         </div>
 
+        <!-- Student Performance Analytics Section -->
+        <div class="card full-width" style="margin-top: 25px;" id="analyticsSection">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
+                <div>
+                    <h3 style="margin-bottom: 4px; color: #172554;">📈 Student Performance Analytics</h3>
+                    <p style="color: #64748b; font-size: 14px;">Real-time preparation metrics, subject mastery, and learning insights.</p>
+                </div>
+                <span id="analyticsStatusBadge" style="font-size: 12px; font-weight: bold; background: #e0f2fe; color: #0369a1; padding: 4px 12px; border-radius: 20px;">
+                    Live Analytics
+                </span>
+            </div>
+
+            <!-- 1. Overall Progress Stat Cards -->
+            <div class="analytics-stats-grid">
+                <div class="analytics-stat-card">
+                    <div class="stat-icon" style="background: #eff6ff; color: #2563eb;">📚</div>
+                    <div class="stat-data">
+                        <span class="stat-label">Total Topics</span>
+                        <span class="stat-value" id="analyticsTotalTopics">0</span>
+                    </div>
+                </div>
+                <div class="analytics-stat-card">
+                    <div class="stat-icon" style="background: #f0fdf4; color: #16a34a;">✅</div>
+                    <div class="stat-data">
+                        <span class="stat-label">Completed</span>
+                        <span class="stat-value" id="analyticsCompletedTopics">0</span>
+                    </div>
+                </div>
+                <div class="analytics-stat-card">
+                    <div class="stat-icon" style="background: #fffbeb; color: #d97706;">⏳</div>
+                    <div class="stat-data">
+                        <span class="stat-label">Pending</span>
+                        <span class="stat-value" id="analyticsPendingTopics">0</span>
+                    </div>
+                </div>
+                <div class="analytics-stat-card">
+                    <div class="stat-icon" style="background: #faf5ff; color: #7c3aed;">🎯</div>
+                    <div class="stat-data">
+                        <span class="stat-label">Overall Mastery</span>
+                        <span class="stat-value" id="analyticsOverallPct">0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Overall Visual Progress Bar -->
+            <div style="margin-top: 20px;">
+                <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: bold; margin-bottom: 6px;">
+                    <span>Overall Syllabus Completion</span>
+                    <span id="analyticsBarLabel">0% Complete</span>
+                </div>
+                <div style="width: 100%; height: 12px; background: #e2e8f0; border-radius: 10px; overflow: hidden;">
+                    <div id="analyticsProgressBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #2563eb, #16a34a); border-radius: 10px; transition: width 0.3s ease;"></div>
+                </div>
+            </div>
+
+            <!-- 2. Subject-wise Performance Grid & 3. Learning Insights -->
+            <div class="analytics-dual-grid" style="margin-top: 25px;">
+                <!-- Subject-wise Breakdown -->
+                <div class="analytics-sub-card">
+                    <h4 style="color: #172554; margin-bottom: 15px; font-size: 16px; display: flex; align-items: center; gap: 8px;">
+                        <span>📊</span>
+                        <span>Subject-wise Mastery</span>
+                    </h4>
+                    <div id="analyticsSubjectList" style="display: flex; flex-direction: column; gap: 14px;">
+                        <p style="color: #64748b; font-size: 14px;">No subjects added yet. Add subjects to see performance metrics.</p>
+                    </div>
+                </div>
+
+                <!-- Learning Insights & Personalized Recommendations -->
+                <div class="analytics-sub-card">
+                    <h4 style="color: #172554; margin-bottom: 15px; font-size: 16px; display: flex; align-items: center; gap: 8px;">
+                        <span>💡</span>
+                        <span>Learning Insights & Recommendations</span>
+                    </h4>
+                    <div id="analyticsInsightsContainer" style="display: flex; flex-direction: column; gap: 12px;">
+                        <div style="padding: 14px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; color: #64748b;">
+                            Add your subjects and study topics to generate personalized performance insights.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </section>
 
 </main>
+
+<!-- Floating AI Study Assistant Chat Widget -->
+<button type="button" id="aiChatToggleBtn" class="ai-chat-toggle-btn" aria-label="Open AI Study Assistant">
+    <span>🤖</span>
+    <span>Ask AI Mentor</span>
+</button>
+
+<div id="aiChatPanel" class="ai-chat-panel" role="dialog" aria-labelledby="aiChatTitle">
+    <div class="ai-chat-header">
+        <div class="ai-chat-header-info">
+            <h4 id="aiChatTitle">🤖 AI Study Assistant</h4>
+            <p>Powered by Gemini • Engineering Mentor</p>
+        </div>
+        <button type="button" id="aiChatCloseBtn" class="ai-chat-close-btn" aria-label="Close Chat">✕</button>
+    </div>
+
+    <div class="ai-chat-prompts-bar">
+        <button type="button" class="ai-prompt-chip" data-prompt="explain">💡 Explain a difficult topic</button>
+        <button type="button" class="ai-prompt-chip" data-prompt="strategy">📅 Make a revision strategy</button>
+        <button type="button" class="ai-prompt-chip" data-prompt="quiz">📝 Quiz me on pending topics</button>
+        <button type="button" class="ai-prompt-chip" data-prompt="prepare">🎯 Help me prepare for exams</button>
+    </div>
+
+    <div id="aiChatMessages" class="ai-chat-messages">
+        <div class="ai-msg ai-msg-assistant">Hello! 👋 I am your TimeWise AI Study Assistant.
+
+I can help clarify technical concepts, solve doubts, prioritize your pending topics, or build an exam revision strategy. How can I help you today?</div>
+    </div>
+
+    <div id="aiTypingIndicator" class="ai-typing-indicator">
+        <span>Gemini is thinking</span>
+        <span class="ai-typing-dots">
+            <span class="ai-typing-dot"></span>
+            <span class="ai-typing-dot"></span>
+            <span class="ai-typing-dot"></span>
+        </span>
+    </div>
+
+    <div class="ai-chat-input-area">
+        <textarea id="aiChatInput" placeholder="Ask a study question or doubt..." rows="1"></textarea>
+        <button type="button" id="aiChatSendBtn" class="ai-chat-send-btn">Send</button>
+    </div>
+</div>
 
 <script>
 let subjects = [];
@@ -404,6 +1007,10 @@ function displaySubjects() {
 
         subjectList.appendChild(item);
     });
+
+    if (typeof updatePerformanceAnalytics === "function") {
+        updatePerformanceAnalytics();
+    }
 }
 
 
@@ -578,6 +1185,325 @@ subjects.forEach(function(subject) {
 });
 
 
+// ==========================================
+// Gemini AI Adaptive Study Planner
+// ==========================================
+
+const optimizeWithGeminiButton = document.getElementById("optimizeWithGeminiButton");
+
+function formatAdaptiveDate(dateStr) {
+    if (!dateStr) return "";
+    try {
+        const parts = dateStr.split("-");
+        if (parts.length === 3) {
+            const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+            if (!isNaN(d.getTime())) {
+                const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
+                return d.toLocaleDateString(undefined, options);
+            }
+        }
+    } catch (e) {}
+    return dateStr;
+}
+
+async function generateAdaptivePlanWithGemini() {
+    const name = document.getElementById("studentName").value.trim();
+    const branch = document.getElementById("studentBranch").value;
+    const semester = document.getElementById("studentSemester").value;
+    const studyHours = Number(document.getElementById("studyHours").value);
+    const examDate = document.getElementById("examDate").value;
+
+    if (!name || !branch || !semester || !studyHours || !examDate) {
+        alert("Please fill your student details, study hours, and upcoming exam date first!");
+        return;
+    }
+
+    if (subjects.length === 0) {
+        alert("Please add at least one subject!");
+        return;
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const exam = new Date(examDate + "T00:00:00");
+
+    if (isNaN(exam.getTime()) || exam < today) {
+        alert("Please select a valid future exam date!");
+        return;
+    }
+
+    const remainingDays = Math.ceil((exam - today) / (1000 * 60 * 60 * 24));
+
+    const pendingTopics = studyTopics.filter(function (item) {
+        return !item.completed;
+    });
+
+    const completedTopics = studyTopics.filter(function (item) {
+        return item.completed;
+    });
+
+    const result = document.getElementById("studyPlanResult");
+    result.innerHTML = "";
+
+    // Show loading state
+    const loadingCard = document.createElement("div");
+    loadingCard.style.padding = "30px";
+    loadingCard.style.textAlign = "center";
+    loadingCard.style.background = "#f8fafc";
+    loadingCard.style.border = "1px solid #e2e8f0";
+    loadingCard.style.borderRadius = "12px";
+
+    const loadingEmoji = document.createElement("div");
+    loadingEmoji.textContent = "✨";
+    loadingEmoji.style.fontSize = "32px";
+    loadingEmoji.style.marginBottom = "10px";
+    loadingCard.appendChild(loadingEmoji);
+
+    const loadingTitle = document.createElement("h3");
+    loadingTitle.textContent = "Gemini is building your adaptive study plan...";
+    loadingTitle.style.color = "#172554";
+    loadingTitle.style.marginBottom = "8px";
+    loadingCard.appendChild(loadingTitle);
+
+    const loadingSubtitle = document.createElement("p");
+    loadingSubtitle.textContent = "Balancing your pending topics, daily study hours, and exam deadline with spaced repetition.";
+    loadingSubtitle.style.color = "#64748b";
+    loadingSubtitle.style.fontSize = "14px";
+    loadingCard.appendChild(loadingSubtitle);
+
+    result.appendChild(loadingCard);
+    result.scrollIntoView({ behavior: "smooth" });
+
+    optimizeWithGeminiButton.disabled = true;
+    optimizeWithGeminiButton.textContent = "✨ Optimizing with Gemini...";
+
+    const payload = {
+        branch: branch,
+        semester: semester,
+        subjects: subjects,
+        pendingTopics: pendingTopics,
+        completedTopics: completedTopics,
+        examDate: examDate,
+        availableHours: studyHours,
+        currentDate: new Date().toISOString().split("T")[0]
+    };
+
+    try {
+        const response = await fetch("/api/ai/adaptive-plan", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json().catch(function () { return {}; });
+
+        if (!response.ok || !data.plan) {
+            const errorMsg = data.error || ("Server error (" + response.status + "): Unable to generate plan.");
+            renderAdaptiveError(errorMsg);
+            return;
+        }
+
+        renderAdaptivePlan(data, name, branch, semester, studyHours, remainingDays, pendingTopics.length, completedTopics.length);
+
+    } catch (networkError) {
+        renderAdaptiveError("Network error: Unable to communicate with the AI planner. Please check your connection and ensure the Flask server is running.");
+    } finally {
+        optimizeWithGeminiButton.disabled = false;
+        optimizeWithGeminiButton.textContent = "✨ Optimize with Gemini";
+    }
+}
+
+function renderAdaptiveError(errorMessage) {
+    const result = document.getElementById("studyPlanResult");
+    result.innerHTML = "";
+
+    const errBox = document.createElement("div");
+    errBox.style.padding = "22px";
+    errBox.style.background = "#fef2f2";
+    errBox.style.border = "1px solid #fecaca";
+    errBox.style.borderRadius = "12px";
+    errBox.style.color = "#991b1b";
+
+    const heading = document.createElement("h3");
+    heading.textContent = "⚠️ Unable to Generate Adaptive Plan";
+    errBox.appendChild(heading);
+
+    const desc = document.createElement("p");
+    desc.textContent = errorMessage;
+    desc.style.marginTop = "8px";
+    desc.style.fontSize = "14px";
+    desc.style.lineHeight = "1.5";
+    errBox.appendChild(desc);
+
+    const retryBtn = document.createElement("button");
+    retryBtn.type = "button";
+    retryBtn.textContent = "🔄 Retry Optimization";
+    retryBtn.style.marginTop = "16px";
+    retryBtn.style.background = "#dc2626";
+    retryBtn.style.color = "white";
+    retryBtn.style.padding = "10px 18px";
+    retryBtn.style.border = "none";
+    retryBtn.style.borderRadius = "8px";
+    retryBtn.style.cursor = "pointer";
+    retryBtn.addEventListener("click", function () {
+        generateAdaptivePlanWithGemini();
+    });
+    errBox.appendChild(retryBtn);
+
+    result.appendChild(errBox);
+    result.scrollIntoView({ behavior: "smooth" });
+}
+
+function renderAdaptivePlan(data, name, branch, semester, studyHours, remainingDays, pendingCount, completedCount) {
+    const result = document.getElementById("studyPlanResult");
+    result.innerHTML = "";
+
+    // Main Heading
+    const heading = document.createElement("h2");
+    heading.textContent = "🧠 Gemini AI Adaptive Study Plan ✨";
+    result.appendChild(heading);
+
+    // Student Details
+    const details = document.createElement("p");
+    details.textContent = name + " | " + branch + " | Semester " + semester;
+    result.appendChild(details);
+
+    // Countdown Badge
+    const countdown = document.createElement("h3");
+    countdown.textContent = "⏳ " + remainingDays + " days remaining until your exam!";
+    countdown.style.color = "#7c3aed";
+    countdown.style.marginTop = "6px";
+    result.appendChild(countdown);
+
+    // Summary description
+    const summary = document.createElement("p");
+    summary.textContent = "📚 Target Study: " + studyHours + " hrs/day | ⏳ Pending Topics: " + pendingCount + " | ✅ Completed Topics: " + completedCount;
+    summary.style.marginTop = "4px";
+    result.appendChild(summary);
+
+    // Days grid / list
+    data.plan.forEach(function (day) {
+        const dayCard = document.createElement("div");
+        dayCard.style.background = "#f1f5f9";
+        dayCard.style.padding = "16px 18px";
+        dayCard.style.marginTop = "16px";
+        dayCard.style.borderRadius = "10px";
+
+        // Calculate total day duration
+        const totalMinutes = (day.sessions || []).reduce(function (acc, s) {
+            return acc + (Number(s.durationMinutes) || 60);
+        }, 0);
+        const totalHours = Math.round((totalMinutes / 60) * 10) / 10;
+
+        const dayHeader = document.createElement("div");
+        dayHeader.style.display = "flex";
+        dayHeader.style.justifyContent = "space-between";
+        dayHeader.style.alignItems = "center";
+        dayHeader.style.flexWrap = "wrap";
+        dayHeader.style.gap = "8px";
+        dayHeader.style.marginBottom = "12px";
+
+        const dayTitle = document.createElement("h3");
+        dayTitle.textContent = "📅 " + formatAdaptiveDate(day.date);
+        dayTitle.style.color = "#172554";
+        dayHeader.appendChild(dayTitle);
+
+        const durationBadge = document.createElement("span");
+        durationBadge.textContent = "⏱️ " + totalHours + " hrs (" + totalMinutes + "m)";
+        durationBadge.style.fontSize = "12px";
+        durationBadge.style.fontWeight = "bold";
+        durationBadge.style.background = "#e2e8f0";
+        durationBadge.style.padding = "4px 10px";
+        durationBadge.style.borderRadius = "12px";
+        durationBadge.style.color = "#475569";
+        dayHeader.appendChild(durationBadge);
+
+        dayCard.appendChild(dayHeader);
+
+        // Sessions list
+        (day.sessions || []).forEach(function (session, sIdx) {
+            const sessionRow = document.createElement("div");
+            sessionRow.style.display = "flex";
+            sessionRow.style.alignItems = "center";
+            sessionRow.style.padding = "9px 12px";
+            sessionRow.style.marginBottom = "8px";
+            sessionRow.style.background = "white";
+            sessionRow.style.borderRadius = "8px";
+            sessionRow.style.border = "1px solid #e2e8f0";
+
+            const badge = document.createElement("span");
+            badge.className = "adaptive-session-badge";
+            const activity = (session.activity || "Learn").toLowerCase();
+            if (activity.includes("revision")) {
+                badge.classList.add("badge-revision");
+                badge.textContent = "Revision";
+            } else if (activity.includes("practice")) {
+                badge.classList.add("badge-practice");
+                badge.textContent = "Practice";
+            } else {
+                badge.classList.add("badge-learn");
+                badge.textContent = "Learn";
+            }
+            sessionRow.appendChild(badge);
+
+            const sessionInfo = document.createElement("span");
+            sessionInfo.style.flex = "1";
+            sessionInfo.style.fontSize = "14px";
+            sessionInfo.textContent = (session.subject ? (session.subject + " — ") : "") + session.topic;
+            sessionRow.appendChild(sessionInfo);
+
+            const timeSpan = document.createElement("span");
+            timeSpan.style.fontSize = "12px";
+            timeSpan.style.color = "#64748b";
+            timeSpan.textContent = session.durationMinutes + " min";
+            sessionRow.appendChild(timeSpan);
+
+            dayCard.appendChild(sessionRow);
+        });
+
+        result.appendChild(dayCard);
+    });
+
+    // Notes & Study Recommendations
+    if (Array.isArray(data.notes) && data.notes.length > 0) {
+        const notesCard = document.createElement("div");
+        notesCard.style.marginTop = "22px";
+        notesCard.style.padding = "16px 20px";
+        notesCard.style.background = "#eff6ff";
+        notesCard.style.border = "1px solid #bfdbfe";
+        notesCard.style.borderRadius = "10px";
+
+        const notesHeading = document.createElement("h3");
+        notesHeading.textContent = "💡 Gemini Mentor Recommendations";
+        notesHeading.style.color = "#1e40af";
+        notesHeading.style.marginBottom = "10px";
+        notesCard.appendChild(notesHeading);
+
+        const notesList = document.createElement("ul");
+        notesList.style.paddingLeft = "20px";
+        notesList.style.color = "#1e3a8a";
+        notesList.style.lineHeight = "1.6";
+        notesList.style.fontSize = "14px";
+
+        data.notes.forEach(function (note) {
+            const li = document.createElement("li");
+            li.textContent = note;
+            notesList.appendChild(li);
+        });
+
+        notesCard.appendChild(notesList);
+        result.appendChild(notesCard);
+    }
+
+    result.scrollIntoView({ behavior: "smooth" });
+}
+
+optimizeWithGeminiButton.addEventListener("click", generateAdaptivePlanWithGemini);
+
+
 
 document.getElementById("downloadStudyPlanPDF")
 .addEventListener("click", function () {
@@ -735,10 +1661,247 @@ function updateOverallProgress() {
 
     document.getElementById("progressBar").style.width =
         percentage + "%";
+
+    // Update Student Performance Analytics dashboard
+    updatePerformanceAnalytics();
+}
+
+// ==========================================
+// Student Performance Analytics Logic
+// ==========================================
+
+function updatePerformanceAnalytics() {
+    const totalElem = document.getElementById("analyticsTotalTopics");
+    const completedElem = document.getElementById("analyticsCompletedTopics");
+    const pendingElem = document.getElementById("analyticsPendingTopics");
+    const overallPctElem = document.getElementById("analyticsOverallPct");
+    const barLabelElem = document.getElementById("analyticsBarLabel");
+    const progressBarElem = document.getElementById("analyticsProgressBar");
+    const subjectListElem = document.getElementById("analyticsSubjectList");
+    const insightsContainerElem = document.getElementById("analyticsInsightsContainer");
+
+    if (!totalElem || !subjectListElem || !insightsContainerElem) {
+        return;
+    }
+
+    const topics = (typeof studyTopics !== "undefined" && Array.isArray(studyTopics)) ? studyTopics : [];
+    const subs = (typeof subjects !== "undefined" && Array.isArray(subjects)) ? subjects : [];
+
+    // 1. Overall Progress Counts
+    const totalTopics = topics.length;
+    const completedTopics = topics.filter(function (t) { return t.completed; }).length;
+    const pendingTopics = totalTopics - completedTopics;
+    const overallPct = totalTopics === 0 ? 0 : Math.round((completedTopics / totalTopics) * 100);
+
+    totalElem.textContent = totalTopics;
+    completedElem.textContent = completedTopics;
+    pendingElem.textContent = pendingTopics;
+    overallPctElem.textContent = overallPct + "%";
+    barLabelElem.textContent = overallPct + "% Complete (" + completedTopics + "/" + totalTopics + " topics)";
+    progressBarElem.style.width = overallPct + "%";
+
+    // 2. Subject-wise Performance
+    subjectListElem.innerHTML = "";
+
+    // Build unique subjects map from both subjects list and topics
+    const subjectMap = {};
+
+    subs.forEach(function (s) {
+        const trimmed = String(s).trim();
+        if (trimmed && !subjectMap[trimmed]) {
+            subjectMap[trimmed] = { total: 0, completed: 0, pending: 0 };
+        }
+    });
+
+    topics.forEach(function (t) {
+        const s = String(t.subject || "General").trim();
+        if (!subjectMap[s]) {
+            subjectMap[s] = { total: 0, completed: 0, pending: 0 };
+        }
+        subjectMap[s].total++;
+        if (t.completed) {
+            subjectMap[s].completed++;
+        } else {
+            subjectMap[s].pending++;
+        }
+    });
+
+    const subjectKeys = Object.keys(subjectMap);
+
+    if (subjectKeys.length === 0) {
+        const emptyMsg = document.createElement("p");
+        emptyMsg.style.color = "#64748b";
+        emptyMsg.style.fontSize = "14px";
+        emptyMsg.textContent = "No subjects added yet. Add subjects in Study Preferences to see subject performance.";
+        subjectListElem.appendChild(emptyMsg);
+    } else {
+        subjectKeys.forEach(function (subjName) {
+            const data = subjectMap[subjName];
+            const pct = data.total === 0 ? 0 : Math.round((data.completed / data.total) * 100);
+
+            const item = document.createElement("div");
+            item.className = "subject-perf-item";
+
+            const header = document.createElement("div");
+            header.className = "subject-perf-header";
+
+            const nameSpan = document.createElement("span");
+            nameSpan.className = "subject-perf-name";
+            nameSpan.textContent = "📚 " + subjName;
+            header.appendChild(nameSpan);
+
+            const pctSpan = document.createElement("span");
+            pctSpan.className = "subject-perf-pct";
+            pctSpan.textContent = pct + "%";
+            pctSpan.style.color = pct >= 75 ? "#16a34a" : (pct >= 40 ? "#2563eb" : "#d97706");
+            header.appendChild(pctSpan);
+
+            item.appendChild(header);
+
+            const sub = document.createElement("div");
+            sub.className = "subject-perf-sub";
+            if (data.total === 0) {
+                sub.textContent = "0 topics added yet for this subject";
+            } else {
+                sub.textContent = data.completed + " of " + data.total + " completed (" + data.pending + " pending)";
+            }
+            item.appendChild(sub);
+
+            const barContainer = document.createElement("div");
+            barContainer.style.width = "100%";
+            barContainer.style.height = "8px";
+            barContainer.style.background = "#e2e8f0";
+            barContainer.style.borderRadius = "6px";
+            barContainer.style.overflow = "hidden";
+
+            const barFill = document.createElement("div");
+            barFill.style.height = "100%";
+            barFill.style.width = pct + "%";
+            barFill.style.background = pct >= 75 ? "#16a34a" : (pct >= 40 ? "#2563eb" : "#d97706");
+            barFill.style.borderRadius = "6px";
+            barFill.style.transition = "width 0.3s ease";
+            barContainer.appendChild(barFill);
+
+            item.appendChild(barContainer);
+
+            subjectListElem.appendChild(item);
+        });
+    }
+
+    // 3. Learning Insights & Personalized Recommendations
+    insightsContainerElem.innerHTML = "";
+
+    const activeSubjects = subjectKeys.filter(function (s) {
+        return subjectMap[s].total > 0;
+    });
+
+    if (totalTopics === 0) {
+        const noDataPill = document.createElement("div");
+        noDataPill.className = "insight-pill insight-recommendation";
+        noDataPill.textContent = "💡 Tip: Add your study topics in the Study Progress Tracker above to unlock real-time mastery analytics and learning recommendations.";
+        insightsContainerElem.appendChild(noDataPill);
+        return;
+    }
+
+    // A. Identify subject with highest completion percentage
+    let bestSubject = null;
+    let highestPct = -1;
+
+    activeSubjects.forEach(function (s) {
+        const data = subjectMap[s];
+        const pct = Math.round((data.completed / data.total) * 100);
+        if (pct > highestPct) {
+            highestPct = pct;
+            bestSubject = s;
+        }
+    });
+
+    if (bestSubject && highestPct > 0) {
+        const bestPill = document.createElement("div");
+        bestPill.className = "insight-pill insight-best";
+        const bData = subjectMap[bestSubject];
+        bestPill.textContent = "🏆 Highest Completion: " + bestSubject + " (" + highestPct + "% complete — " + bData.completed + " of " + bData.total + " topics mastered).";
+        insightsContainerElem.appendChild(bestPill);
+    }
+
+    // B. Identify subject needing the most attention
+    let attentionSubject = null;
+    let lowestPct = 101;
+    let maxPending = -1;
+
+    activeSubjects.forEach(function (s) {
+        const data = subjectMap[s];
+        if (data.pending > 0) {
+            const pct = Math.round((data.completed / data.total) * 100);
+            if (pct < lowestPct || (pct === lowestPct && data.pending > maxPending)) {
+                lowestPct = pct;
+                maxPending = data.pending;
+                attentionSubject = s;
+            }
+        }
+    });
+
+    if (attentionSubject) {
+        const attentionPill = document.createElement("div");
+        attentionPill.className = "insight-pill insight-attention";
+        const aData = subjectMap[attentionSubject];
+        attentionPill.textContent = "⚠️ Needs Attention: " + attentionSubject + " has " + aData.pending + " pending topic" + (aData.pending === 1 ? "" : "s") + " (" + lowestPct + "% complete). Prioritize this subject in your next study blocks.";
+        insightsContainerElem.appendChild(attentionPill);
+    } else if (completedTopics === totalTopics && totalTopics > 0) {
+        const allDonePill = document.createElement("div");
+        allDonePill.className = "insight-pill insight-best";
+        allDonePill.textContent = "🎉 Outstanding! All " + totalTopics + " tracked topics are completed. Focus your upcoming study sessions on full-length practice tests and revision.";
+        insightsContainerElem.appendChild(allDonePill);
+    }
+
+    // C. Personalized recommendations based on actual pending topics
+    const uncompletedTopics = topics.filter(function (t) { return !t.completed; });
+    const recPill = document.createElement("div");
+    recPill.className = "insight-pill insight-recommendation";
+
+    if (uncompletedTopics.length > 0) {
+        let targetTopic = null;
+        if (attentionSubject) {
+            targetTopic = uncompletedTopics.find(function (t) { return t.subject === attentionSubject; });
+        }
+        if (!targetTopic) {
+            targetTopic = uncompletedTopics[0];
+        }
+
+        let recText = "📌 Immediate Next Goal: Study \"" + targetTopic.topic + "\" in " + targetTopic.subject + ".";
+
+        const examDateInput = document.getElementById("examDate");
+        if (examDateInput && examDateInput.value) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const exam = new Date(examDateInput.value + "T00:00:00");
+            if (!isNaN(exam.getTime())) {
+                const daysLeft = Math.ceil((exam - today) / (1000 * 60 * 60 * 24));
+                if (daysLeft > 0) {
+                    recText += " With " + daysLeft + " day" + (daysLeft === 1 ? "" : "s") + " until your exam, completing this pending topic will quickly improve your readiness.";
+                }
+            }
+        }
+
+        recPill.textContent = recText;
+    } else {
+        recPill.textContent = "💡 Recommendation: Ask the Gemini AI Study Assistant to quiz you on key concepts to maintain long-term memory retention.";
+    }
+
+    insightsContainerElem.appendChild(recPill);
 }
 
 updateProgressSubjects();
 displayProgressTopics();
+updatePerformanceAnalytics();
+saveStatus.textContent = "✅ Your saved data loaded successfully!";
+
+const examDateInput = document.getElementById("examDate");
+if (examDateInput) {
+    examDateInput.addEventListener("change", function () {
+        updatePerformanceAnalytics();
+    });
+}
 
 
 // Save Student Data to Flask Backend
@@ -842,6 +2005,223 @@ document.getElementById("loadStudentDataButton")
         saveStatus.textContent = "❌ " + error.message;
         saveStatus.style.color = "red";
     }
+});
+
+// ==========================================
+// Gemini AI Study Assistant Chat Widget
+// ==========================================
+
+const aiChatToggleBtn = document.getElementById("aiChatToggleBtn");
+const aiChatPanel = document.getElementById("aiChatPanel");
+const aiChatCloseBtn = document.getElementById("aiChatCloseBtn");
+const aiChatMessages = document.getElementById("aiChatMessages");
+const aiTypingIndicator = document.getElementById("aiTypingIndicator");
+const aiChatInput = document.getElementById("aiChatInput");
+const aiChatSendBtn = document.getElementById("aiChatSendBtn");
+const aiPromptChips = document.querySelectorAll(".ai-prompt-chip");
+
+let isAILoading = false;
+
+// Toggle Chat Panel visibility
+aiChatToggleBtn.addEventListener("click", function () {
+    const isOpening = !aiChatPanel.classList.contains("active");
+    aiChatPanel.classList.toggle("active");
+    if (isOpening) {
+        aiChatInput.focus();
+        aiChatMessages.scrollTop = aiChatMessages.scrollHeight;
+    }
+});
+
+aiChatCloseBtn.addEventListener("click", function () {
+    aiChatPanel.classList.remove("active");
+});
+
+// Auto-expand input textarea
+aiChatInput.addEventListener("input", function () {
+    this.style.height = "42px";
+    this.style.height = Math.min(this.scrollHeight, 100) + "px";
+});
+
+// Enter key sends message, Shift+Enter for new line
+aiChatInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendAIMessage();
+    }
+});
+
+aiChatSendBtn.addEventListener("click", function () {
+    sendAIMessage();
+});
+
+// Gather actual student academic profile from the dashboard
+function getStudentAcademicContext() {
+    const branchElem = document.getElementById("studentBranch");
+    const semesterElem = document.getElementById("studentSemester");
+    const examDateElem = document.getElementById("examDate");
+    const studyHoursElem = document.getElementById("studyHours");
+
+    const branch = branchElem ? branchElem.value : "";
+    const semester = semesterElem ? semesterElem.value : "";
+    const examDate = examDateElem ? examDateElem.value : "";
+    const availableHours = studyHoursElem ? studyHoursElem.value : "";
+
+    // Use actual existing studyTopics array: filter only incomplete topics
+    const pending = (typeof studyTopics !== "undefined" && Array.isArray(studyTopics))
+        ? studyTopics.filter(function (item) { return !item.completed; })
+        : [];
+
+    // Use actual existing subjects array
+    const currentSubjects = (typeof subjects !== "undefined" && Array.isArray(subjects))
+        ? subjects
+        : [];
+
+    return {
+        branch: branch,
+        semester: semester,
+        subjects: currentSubjects,
+        pendingTopics: pending,
+        examDate: examDate,
+        availableHours: availableHours
+    };
+}
+
+// Safely append a message to chat using textContent (NEVER innerHTML)
+function appendAIMessage(text, sender, isError) {
+    const msgDiv = document.createElement("div");
+    msgDiv.className = "ai-msg";
+
+    if (sender === "user") {
+        msgDiv.classList.add("ai-msg-user");
+    } else if (isError) {
+        msgDiv.classList.add("ai-msg-error");
+    } else {
+        msgDiv.classList.add("ai-msg-assistant");
+    }
+
+    msgDiv.textContent = text;
+    aiChatMessages.appendChild(msgDiv);
+    aiChatMessages.scrollTop = aiChatMessages.scrollHeight;
+}
+
+// Set loading UI state
+function setAILoading(loading) {
+    isAILoading = loading;
+    aiChatSendBtn.disabled = loading;
+    aiChatInput.disabled = loading;
+    aiTypingIndicator.style.display = loading ? "inline-flex" : "none";
+    if (loading) {
+        aiChatMessages.scrollTop = aiChatMessages.scrollHeight;
+    }
+}
+
+// Send user message to Gemini backend
+async function sendAIMessage(presetMessage) {
+    const message = (presetMessage || aiChatInput.value).trim();
+
+    if (!message) {
+        return;
+    }
+
+    if (isAILoading) {
+        return;
+    }
+
+    // Ensure chat panel is open
+    if (!aiChatPanel.classList.contains("active")) {
+        aiChatPanel.classList.add("active");
+    }
+
+    // Display user message in chat
+    appendAIMessage(message, "user", false);
+    aiChatInput.value = "";
+    aiChatInput.style.height = "42px";
+
+    setAILoading(true);
+
+    const context = getStudentAcademicContext();
+    const payload = {
+        message: message,
+        branch: context.branch,
+        semester: context.semester,
+        subjects: context.subjects,
+        pendingTopics: context.pendingTopics,
+        examDate: context.examDate,
+        availableHours: context.availableHours
+    };
+
+    try {
+        const response = await fetch("/api/ai/study-assistant", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json().catch(function () { return {}; });
+
+        if (!response.ok) {
+            const errorMsg = data.error || ("Server error (" + response.status + "): Unable to get response.");
+            appendAIMessage("⚠️ " + errorMsg, "assistant", true);
+        } else if (data.reply) {
+            appendAIMessage(data.reply, "assistant", false);
+        } else {
+            appendAIMessage("⚠️ The AI service returned an empty response. Please try rephrasing your question.", "assistant", true);
+        }
+    } catch (networkError) {
+        appendAIMessage("⚠️ Network connection error. Please ensure your internet connection and Flask server are active.", "assistant", true);
+    } finally {
+        setAILoading(false);
+        aiChatInput.focus();
+    }
+}
+
+// Quick prompt suggestions tailored to actual student state
+aiPromptChips.forEach(function (chip) {
+    chip.addEventListener("click", function () {
+        const promptType = this.getAttribute("data-prompt");
+        const context = getStudentAcademicContext();
+        let promptText = "";
+
+        if (promptType === "explain") {
+            if (context.pendingTopics.length > 0) {
+                const topicItem = context.pendingTopics[0];
+                promptText = "Can you explain the topic \"" + topicItem.topic + "\" in " + topicItem.subject + " step-by-step with an engineering example?";
+            } else if (context.subjects.length > 0) {
+                promptText = "Can you explain a key fundamental concept in " + context.subjects[0] + " with an intuitive example?";
+            } else {
+                promptText = "Can you explain a difficult engineering concept step-by-step with an example?";
+            }
+        } else if (promptType === "strategy") {
+            if (context.examDate) {
+                promptText = "Given my upcoming exam on " + context.examDate + " and " + (context.availableHours || "4") + " hours/day of study, what is the best revision strategy for my subjects?";
+            } else {
+                promptText = "Can you recommend an effective daily revision strategy and schedule for my engineering subjects?";
+            }
+        } else if (promptType === "quiz") {
+            if (context.pendingTopics.length > 0) {
+                const topicNames = context.pendingTopics.slice(0, 3).map(function (t) {
+                    return t.subject + " - " + t.topic;
+                }).join(", ");
+                promptText = "Can you test my knowledge with a 3-question conceptual quiz on my pending topics: " + topicNames + "?";
+            } else if (context.subjects.length > 0) {
+                promptText = "Can you quiz me with 3 conceptual questions on " + context.subjects.join(", ") + " to test my fundamentals?";
+            } else {
+                promptText = "Can you quiz me with 3 conceptual questions on engineering fundamentals?";
+            }
+        } else if (promptType === "prepare") {
+            if (context.subjects.length > 0) {
+                promptText = "What are the most effective high-yield exam preparation and active recall techniques for " + context.subjects.join(", ") + "?";
+            } else {
+                promptText = "What are the most effective high-yield exam preparation techniques for engineering semester exams?";
+            }
+        }
+
+        if (promptText) {
+            sendAIMessage(promptText);
+        }
+    });
 });
 
 </script>

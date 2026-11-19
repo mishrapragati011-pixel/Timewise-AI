@@ -19,6 +19,23 @@ sys.path.insert(0, PROJECT_FOLDER)
 from algorithms.subjects_data import BRANCHES, SUBJECTS
 from algorithms.timetable_generator import TimetableGenerator
 
+try:
+    from backend.gemini_service import (
+        generate_study_assistant_response,
+        generate_adaptive_study_plan,
+        GeminiConfigError,
+        GeminiAPIError,
+    )
+except ImportError:
+    from gemini_service import (
+        generate_study_assistant_response,
+        generate_adaptive_study_plan,
+        GeminiConfigError,
+        GeminiAPIError,
+    )
+
+MAX_STUDENT_MESSAGE_LENGTH = 2000
+
 @app.route("/")
 def home():
     return send_from_directory(FRONTEND_FOLDER, "index.html")
@@ -317,6 +334,150 @@ def get_student_data():
             "success": False,
             "message": str(error)
         }), 500
+
+
+# API: Gemini AI Study Assistant
+@app.route("/api/ai/study-assistant", methods=["POST"])
+def study_assistant():
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        return jsonify({
+            "error": "Invalid request payload. Expected a JSON object."
+        }), 400
+
+    raw_message = data.get("message")
+    if not isinstance(raw_message, str) or not raw_message.strip():
+        return jsonify({
+            "error": "Message is required and cannot be empty."
+        }), 400
+
+    message = raw_message.strip()
+    if len(message) > MAX_STUDENT_MESSAGE_LENGTH:
+        return jsonify({
+            "error": f"Message is too long. Maximum allowed length is {MAX_STUDENT_MESSAGE_LENGTH} characters."
+        }), 400
+
+    # Extract student academic context safely with bounds
+    branch = str(data.get("branch", "") or "").strip()[:100]
+    semester = str(data.get("semester", "") or "").strip()[:50]
+    subjects = data.get("subjects") or []
+    pending_topics = data.get("pendingTopics") or []
+    exam_date = str(data.get("examDate", "") or "").strip()[:50]
+    available_hours = str(data.get("availableHours", "") or "").strip()[:20]
+
+    # Sanitize lists safely
+    if not isinstance(subjects, list):
+        subjects = [str(subjects)[:100]] if subjects else []
+    else:
+        subjects = [str(s)[:100] for s in subjects[:30]]
+
+    if not isinstance(pending_topics, list):
+        pending_topics = [pending_topics] if pending_topics else []
+    else:
+        pending_topics = pending_topics[:50]
+
+    try:
+        reply = generate_study_assistant_response(
+            message=message,
+            branch=branch,
+            semester=semester,
+            subjects=subjects,
+            pending_topics=pending_topics,
+            exam_date=exam_date,
+            available_hours=available_hours
+        )
+        return jsonify({
+            "reply": reply
+        }), 200
+
+    except GeminiConfigError as config_err:
+        return jsonify({
+            "error": str(config_err)
+        }), 503
+
+    except GeminiAPIError as api_err:
+        return jsonify({
+            "error": str(api_err)
+        }), 502
+
+    except Exception:
+        return jsonify({
+            "error": "An unexpected error occurred while communicating with the AI service. Please try again later."
+        }), 500
+
+
+# API: Gemini AI Adaptive Study Planner
+@app.route("/api/ai/adaptive-plan", methods=["POST"])
+def adaptive_plan():
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        return jsonify({
+            "error": "Invalid request payload. Expected a JSON object."
+        }), 400
+
+    exam_date = str(data.get("examDate", "") or "").strip()[:50]
+    if not exam_date:
+        return jsonify({
+            "error": "Upcoming exam date is required to generate a study plan."
+        }), 400
+
+    branch = str(data.get("branch", "") or "").strip()[:100]
+    semester = str(data.get("semester", "") or "").strip()[:50]
+    subjects = data.get("subjects") or []
+    pending_topics = data.get("pendingTopics") or []
+    completed_topics = data.get("completedTopics") or []
+    available_hours = str(data.get("availableHours", "4") or "4").strip()[:20]
+    current_date = str(data.get("currentDate", "") or "").strip()[:50]
+
+    # Sanitize lists safely
+    if not isinstance(subjects, list):
+        subjects = [str(subjects)[:100]] if subjects else []
+    else:
+        subjects = [str(s)[:100] for s in subjects[:30]]
+
+    if not isinstance(pending_topics, list):
+        pending_topics = [pending_topics] if pending_topics else []
+    else:
+        pending_topics = pending_topics[:50]
+
+    if not isinstance(completed_topics, list):
+        completed_topics = [completed_topics] if completed_topics else []
+    else:
+        completed_topics = completed_topics[:50]
+
+    if not subjects and not pending_topics:
+        return jsonify({
+            "error": "Please provide at least one subject or pending topic."
+        }), 400
+
+    try:
+        result = generate_adaptive_study_plan(
+            branch=branch,
+            semester=semester,
+            subjects=subjects,
+            pending_topics=pending_topics,
+            completed_topics=completed_topics,
+            exam_date=exam_date,
+            available_hours=available_hours,
+            current_date=current_date
+        )
+        return jsonify(result), 200
+
+    except GeminiConfigError as config_err:
+        return jsonify({
+            "error": str(config_err)
+        }), 503
+
+    except GeminiAPIError as api_err:
+        return jsonify({
+            "error": str(api_err)
+        }), 502
+
+    except Exception:
+        return jsonify({
+            "error": "An unexpected error occurred while communicating with the AI service. Please try again later."
+        }), 500
+
 
 if __name__ == "__main__":
 
